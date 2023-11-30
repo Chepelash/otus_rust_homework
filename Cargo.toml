@@ -2,3 +2,4 @@
 members = [
     "lesson1"
 ]
+resolver = "2"
