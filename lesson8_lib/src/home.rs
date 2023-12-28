@@ -1,6 +1,9 @@
 use std::fmt::Display;
 
-use crate::{device::{Device, DeviceInfo}, room::Room};
+use crate::{
+    device::{Device, DeviceInfo},
+    room::Room,
+};
 use anyhow::{anyhow, Ok, Result};
 
 #[derive(Debug)]
@@ -31,7 +34,7 @@ impl<'a> Home<'a> {
         }
         Err(anyhow!("Room with name {} does not exists!", room_name))
     }
-    pub fn add_device(&mut self, room_name: &str, device: &'a dyn Device) -> Result<()> {
+    pub fn add_device(&mut self, room_name: &str, device: &'a mut dyn Device) -> Result<()> {
         let room = self.rooms.iter_mut().find(|r| r.name() == room_name);
         if room.is_none() {
             return Err(anyhow!("Room with name {} does not exists!", room_name));
@@ -86,6 +89,34 @@ impl<'a> Home<'a> {
         }
         Ok(room.unwrap().get_devices())
     }
+    pub fn turn_on(&mut self, device_info: &DeviceInfo) -> Result<()> {
+        let room = self
+            .rooms
+            .iter_mut()
+            .find(|r| r.name() == device_info.room_name);
+        if room.is_none() {
+            return Err(anyhow!(
+                "Room with name {} does not exists!",
+                &device_info.room_name
+            ));
+        }
+        let room = room.unwrap();
+        room.turn_on(&device_info.device_name)
+    }
+    pub fn turn_off(&mut self, device_info: &DeviceInfo) -> Result<()> {
+        let room = self
+            .rooms
+            .iter_mut()
+            .find(|r| r.name() == device_info.room_name);
+        if room.is_none() {
+            return Err(anyhow!(
+                "Room with name {} does not exists!",
+                &device_info.room_name
+            ));
+        }
+        let room = room.unwrap();
+        room.turn_off(&device_info.device_name)
+    }
     fn get_rooms_report(&self) -> String {
         self.rooms.iter().map(|r| r.get_report()).collect()
     }
@@ -101,4 +132,3 @@ impl<'a> Display for Home<'a> {
         )
     }
 }
-

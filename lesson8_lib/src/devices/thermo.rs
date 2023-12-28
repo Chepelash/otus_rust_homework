@@ -29,6 +29,12 @@ impl Device for Thermometer {
 }
 
 impl Thermometer {
+    pub fn new(name: &str) -> Self {
+        Self {
+            name: name.to_string(),
+            state: DeviceState::default(),
+        }
+    }
     fn measure_temperature(&self) -> i32 {
         match self.state {
             DeviceState::On => rand::thread_rng().gen_range(-30..40),
@@ -41,7 +47,7 @@ impl Display for Thermometer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Socket name: {}\nstate: {}\ncurrent temperature: {}",
+            "Socket name: {}\nstate: {}\ncurrent temperature: {}\n",
             self.name,
             self.state,
             self.measure_temperature()

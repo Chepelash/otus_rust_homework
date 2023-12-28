@@ -6,7 +6,7 @@ use anyhow::{anyhow, Ok, Result};
 #[derive(Debug)]
 pub struct Room<'a> {
     name: String,
-    devices: Vec<&'a dyn Device>,
+    devices: Vec<&'a mut dyn Device>,
 }
 
 impl<'a> Room<'a> {
@@ -19,7 +19,7 @@ impl<'a> Room<'a> {
     pub fn name(&self) -> &str {
         &self.name
     }
-    pub fn add_device(&mut self, device: &'a dyn Device) -> Result<()> {
+    pub fn add_device(&mut self, device: &'a mut dyn Device) -> Result<()> {
         if self.devices.iter().any(|d| d.name() == device.name()) {
             return Err(anyhow!("Device with name {} exists!", device.name()));
         }
@@ -49,13 +49,29 @@ impl<'a> Room<'a> {
     fn get_devices_report(&self) -> String {
         self.devices.iter().map(|d| d.get_report()).collect()
     }
+    pub fn turn_on(&mut self, device_name: &str) -> Result<()> {
+        let dev = self.devices.iter_mut().find(|d| d.name() == device_name);
+        if dev.is_none() {
+            return Err(anyhow!("Device with name {} does not exists!", device_name));
+        }
+        dev.unwrap().turn_on();
+        Ok(())
+    }
+    pub fn turn_off(&mut self, device_name: &str) -> Result<()> {
+        let dev = self.devices.iter_mut().find(|d| d.name() == device_name);
+        if dev.is_none() {
+            return Err(anyhow!("Device with name {} does not exists!", device_name));
+        }
+        dev.unwrap().turn_off();
+        Ok(())
+    }
 }
 
 impl<'a> Display for Room<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Room name: {}\n\tdevices: [\n{}]",
+            "Room name: {}\n\tdevices: [\n{}]\n",
             self.name,
             self.get_devices_report()
         )

@@ -29,6 +29,12 @@ impl Device for Socket {
 }
 
 impl Socket {
+    pub fn new(name: &str) -> Self {
+        Self {
+            name: name.to_string(),
+            state: DeviceState::default(),
+        }
+    }
     fn measure_power(&self) -> u32 {
         match self.state {
             DeviceState::On => rand::thread_rng().gen_range(1..100),
@@ -41,7 +47,7 @@ impl Display for Socket {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Socket name: {}\nstate: {}\ncurrent power: {}",
+            "Socket name: {}\nstate: {}\ncurrent power: {}\n",
             self.name,
             self.state,
             self.measure_power()
