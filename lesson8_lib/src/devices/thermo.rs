@@ -4,9 +4,12 @@ use rand::Rng;
 
 use crate::device::{Device, DeviceState};
 
+/// Exampte thermometer
 #[derive(Debug)]
 pub struct Thermometer {
+    /// Device name
     name: String,
+    /// Device state
     state: DeviceState,
 }
 
@@ -35,6 +38,7 @@ impl Thermometer {
             state: DeviceState::default(),
         }
     }
+    /// Dummy function for measuring temperature
     fn measure_temperature(&self) -> i32 {
         match self.state {
             DeviceState::On => rand::thread_rng().gen_range(-30..40),

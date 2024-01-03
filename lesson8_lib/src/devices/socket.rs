@@ -4,9 +4,12 @@ use rand::Rng;
 
 use crate::device::{Device, DeviceState};
 
+/// Example socket
 #[derive(Debug)]
 pub struct Socket {
+    /// Device name
     name: String,
+    /// Device state
     state: DeviceState,
 }
 
@@ -35,6 +38,7 @@ impl Socket {
             state: DeviceState::default(),
         }
     }
+    /// Dummy function for measuring power
     fn measure_power(&self) -> u32 {
         match self.state {
             DeviceState::On => rand::thread_rng().gen_range(1..100),
