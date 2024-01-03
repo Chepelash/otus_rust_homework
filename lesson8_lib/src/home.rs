@@ -7,7 +7,7 @@ use crate::{
 use anyhow::{anyhow, Ok, Result};
 
 /// Home struct
-/// 
+///
 /// Stores vector of rooms.
 /// Room names should be unique
 #[derive(Debug)]
@@ -27,7 +27,7 @@ impl<'a> Home<'a> {
         }
     }
     /// Adds new room
-    /// 
+    ///
     /// Returns `Ok(())` if `room_name` is unique, `Err` otherwise
     pub fn add_room(&mut self, room_name: &str) -> Result<()> {
         if self.rooms.iter().any(|r| r.name() == room_name) {
@@ -38,7 +38,7 @@ impl<'a> Home<'a> {
         Ok(())
     }
     /// Removes a room
-    /// 
+    ///
     /// Returns `Ok(())` if `room_name` is found, `Err` otherwise
     pub fn remove_room(&mut self, room_name: &str) -> Result<()> {
         if self.rooms.iter().any(|r| r.name() == room_name) {
@@ -48,8 +48,8 @@ impl<'a> Home<'a> {
         Err(anyhow!("Room with name {} does not exists!", room_name))
     }
     /// Adds device
-    /// 
-    /// Returns `Ok(())` if `room_name` is exists and `device.name` is unique, 
+    ///
+    /// Returns `Ok(())` if `room_name` is exists and `device.name` is unique,
     /// `Err` otherwise
     pub fn add_device(&mut self, room_name: &str, device: &'a mut dyn Device) -> Result<()> {
         let room = self.rooms.iter_mut().find(|r| r.name() == room_name);
@@ -60,7 +60,7 @@ impl<'a> Home<'a> {
         room.add_device(device)
     }
     /// Removes device
-    /// 
+    ///
     /// Returns `Ok(())` if `device_info.room_name` and `device_info.device_name` exist,
     /// `Err` otherwise
     pub fn remove_device(&mut self, device_info: &DeviceInfo) -> Result<()> {
@@ -86,7 +86,7 @@ impl<'a> Home<'a> {
         self.to_string()
     }
     /// Get device report
-    /// 
+    ///
     /// Returns `Ok(String)` if `device_info.room_name` and `device_info.device_name` exist,
     /// `Err` otherwise
     pub fn get_device_report(&self, device_info: &DeviceInfo) -> Result<String> {
@@ -104,7 +104,7 @@ impl<'a> Home<'a> {
         room.get_device_report(&device_info.device_name)
     }
     /// Get devices reports
-    /// 
+    ///
     /// Returns vec with results.
     /// `Ok(String)` if `device_info.room_name` and `device_info.device_name` exist,
     /// `Err` otherwise
@@ -123,7 +123,7 @@ impl<'a> Home<'a> {
         Ok(room.unwrap().get_devices())
     }
     /// Turns on a device
-    /// 
+    ///
     /// Returns `Ok(())` if `device_info.room_name` and `device_info.device_name` exist,
     /// `Err` otherwise
     pub fn turn_on(&mut self, device_info: &DeviceInfo) -> Result<()> {
@@ -141,7 +141,7 @@ impl<'a> Home<'a> {
         room.turn_on(&device_info.device_name)
     }
     /// Turns off a device
-    /// 
+    ///
     /// Returns `Ok(())` if `device_info.room_name` and `device_info.device_name` exist,
     /// `Err` otherwise
     pub fn turn_off(&mut self, device_info: &DeviceInfo) -> Result<()> {

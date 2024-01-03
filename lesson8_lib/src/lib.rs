@@ -4,11 +4,12 @@ mod home;
 mod room;
 
 pub use device::*;
+pub use devices::socket::Socket;
+pub use devices::thermo::Thermometer;
 pub use home::Home;
 #[cfg(test)]
 mod tests {
-    use crate::devices::{socket::Socket, thermo::Thermometer};
-
+    
     use super::*;
 
     #[test]
