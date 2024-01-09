@@ -108,3 +108,54 @@ impl<'a> Display for Room<'a> {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::Socket;
+
+    use super::*;
+    const ROOM_NAME: &str = "room";
+    const DEVICE_NAME: &str = "dev";
+    #[test]
+    fn add_device() {
+        let mut room = Room::new(ROOM_NAME);
+        let mut device = Socket::new(DEVICE_NAME);
+        assert!(room.add_device(&mut device).is_ok());
+        assert_eq!(room.get_devices().len(), 1);
+    }
+    #[test]
+    fn add_device_with_non_unique_name() {
+        let mut room = Room::new(ROOM_NAME);
+        let mut device = Socket::new(DEVICE_NAME);
+        assert!(room.add_device(&mut device).is_ok());
+        let mut device_duplicate = Socket::new(DEVICE_NAME);
+        assert!(room.add_device(&mut device_duplicate).is_err());
+    }
+    #[test]
+    fn remove_device() {
+        let mut room = Room::new(ROOM_NAME);
+        let mut device = Socket::new(DEVICE_NAME);
+        assert!(room.add_device(&mut device).is_ok());
+        assert!(room.remove_device(DEVICE_NAME).is_ok());
+        assert!(room.get_devices().is_empty());
+    }
+    #[test]
+    fn remove_non_existing_device() {
+        let mut room = Room::new(ROOM_NAME);
+        assert!(room.remove_device(DEVICE_NAME).is_err());
+    }
+    #[test]
+    fn turn_on_off_device() {
+        let mut room = Room::new(ROOM_NAME);
+        let mut device = Socket::new(DEVICE_NAME);
+        room.add_device(&mut device).unwrap();
+        assert!(room.turn_on(DEVICE_NAME).is_ok());
+        assert!(room.turn_off(DEVICE_NAME).is_ok());
+    }
+    #[test]
+    fn turn_on_off_non_existing_device() {
+        let mut room = Room::new(ROOM_NAME);
+        assert!(room.turn_on(DEVICE_NAME).is_err());
+        assert!(room.turn_off(DEVICE_NAME).is_err());
+    }
+}
