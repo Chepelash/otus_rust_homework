@@ -208,7 +208,7 @@ mod tests {
     fn remove_non_existing_room() {
         let mut home = Home::new(HOME_NAME);
         assert_eq!(home.get_room_names().len(), 0);
-        assert!(home.remove_room(ROOM_NAME).is_err());        
+        assert!(home.remove_room(ROOM_NAME).is_err());
     }
 
     #[test]
@@ -221,7 +221,7 @@ mod tests {
         assert!(devices_in_room.is_ok());
         let dev_vec = devices_in_room.unwrap();
         assert_eq!(dev_vec.len(), 1);
-        assert_eq!(dev_vec[0], format!("{}", DEVICE_NAME));
+        assert_eq!(dev_vec[0], DEVICE_NAME.to_string());
     }
     #[test]
     fn add_device_with_existing_name() {
@@ -284,5 +284,4 @@ mod tests {
         assert!(home.turn_on(&device_info).is_err());
         assert!(home.turn_off(&device_info).is_err());
     }
-
 }

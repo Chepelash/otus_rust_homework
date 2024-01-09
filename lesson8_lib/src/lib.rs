@@ -9,7 +9,7 @@ pub use devices::thermo::Thermometer;
 pub use home::Home;
 #[cfg(test)]
 mod tests {
-    
+
     use super::*;
 
     #[test]
