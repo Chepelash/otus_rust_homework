@@ -8,7 +8,7 @@ use anyhow::{anyhow, Ok, Result};
 /// Stores pointers to device.
 /// Device name should be unique
 #[derive(Debug)]
-pub struct Room<'a> {
+pub(crate) struct Room<'a> {
     /// Room name
     name: String,
     /// Vec to store pointers to devices
