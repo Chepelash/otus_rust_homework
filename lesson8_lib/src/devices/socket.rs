@@ -39,10 +39,10 @@ impl Socket {
         }
     }
     /// Dummy function for measuring power
-    fn measure_power(&self) -> u32 {
+    fn measure_power(&self) -> Option<u32> {
         match self.state {
-            DeviceState::On => rand::thread_rng().gen_range(1..100),
-            DeviceState::Off => 0u32,
+            DeviceState::On => Some(rand::thread_rng().gen_range(1..100)),
+            DeviceState::Off => None,
         }
     }
 }
@@ -54,7 +54,7 @@ impl Display for Socket {
             "Socket name: {}\nstate: {}\ncurrent power: {}\n",
             self.name,
             self.state,
-            self.measure_power()
+            self.measure_power().unwrap_or_default()
         )
     }
 }

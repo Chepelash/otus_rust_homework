@@ -39,10 +39,10 @@ impl Thermometer {
         }
     }
     /// Dummy function for measuring temperature
-    fn measure_temperature(&self) -> i32 {
+    fn measure_temperature(&self) -> Option<i32> {
         match self.state {
-            DeviceState::On => rand::thread_rng().gen_range(-30..40),
-            DeviceState::Off => 0,
+            DeviceState::On => Some(rand::thread_rng().gen_range(-30..40)),
+            DeviceState::Off => None,
         }
     }
 }
@@ -54,7 +54,7 @@ impl Display for Thermometer {
             "Socket name: {}\nstate: {}\ncurrent temperature: {}\n",
             self.name,
             self.state,
-            self.measure_temperature()
+            self.measure_temperature().unwrap_or_default()
         )
     }
 }
