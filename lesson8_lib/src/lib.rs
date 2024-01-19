@@ -1,5 +1,6 @@
 mod device;
 mod devices;
+mod errors;
 mod home;
 mod room;
 

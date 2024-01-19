@@ -1,7 +1,6 @@
 use std::fmt::Display;
 
-use crate::device::Device;
-use anyhow::{anyhow, Ok, Result};
+use crate::{device::Device, errors::room_errors::RoomErrors};
 
 /// Room struct
 ///
@@ -31,9 +30,10 @@ impl<'a> Room<'a> {
     ///
     /// Returns `Ok(())` if `device_name` is unique, `Err` with description otherwise
     ///
-    pub fn add_device(&mut self, device: &'a mut dyn Device) -> Result<()> {
+    pub fn add_device(&mut self, device: &'a mut dyn Device) -> Result<(), RoomErrors> {
         if self.devices.iter().any(|d| d.name() == device.name()) {
-            return Err(anyhow!("Device with name {} exists!", device.name()));
+            // return Err(anyhow!("Device with name {} exists!", device.name()));
+            return Err(RoomErrors::DeviceNameExists(device.name().to_string()));
         }
         self.devices.push(device);
         Ok(())
@@ -42,12 +42,12 @@ impl<'a> Room<'a> {
     ///
     /// Returns `Ok(())` if `device_name` is found, `Err` with description otherwise
     ///
-    pub fn remove_device(&mut self, device_name: &str) -> Result<()> {
+    pub fn remove_device(&mut self, device_name: &str) -> Result<(), RoomErrors> {
         if self.devices.iter().any(|d| d.name() == device_name) {
             self.devices.retain(|d| d.name() != device_name);
             return Ok(());
         }
-        Err(anyhow!("Device with name {} does not exists!", device_name))
+        Err(RoomErrors::DeviceNameDoesNotExist(device_name.to_string()))
     }
     /// Returns room report with all internal devices
     pub fn get_report(&self) -> String {
@@ -57,10 +57,10 @@ impl<'a> Room<'a> {
     ///
     /// Returns `Ok(String)` if `device_name` is found, `Err` with description otherwise
     ///
-    pub fn get_device_report(&self, device_name: &str) -> Result<String> {
+    pub fn get_device_report(&self, device_name: &str) -> Result<String, RoomErrors> {
         let dev = self.devices.iter().find(|d| d.name() == device_name);
         if dev.is_none() {
-            return Err(anyhow!("Device with name {} does not exists!", device_name));
+            return Err(RoomErrors::DeviceNameDoesNotExist(device_name.to_string()));
         }
         Ok(dev.unwrap().get_report())
     }
@@ -76,10 +76,10 @@ impl<'a> Room<'a> {
     ///
     /// Returns `Ok(())` if `device_name` is found, `Err` with description otherwise
     ///
-    pub fn turn_on(&mut self, device_name: &str) -> Result<()> {
+    pub fn turn_on(&mut self, device_name: &str) -> Result<(), RoomErrors> {
         let dev = self.devices.iter_mut().find(|d| d.name() == device_name);
         if dev.is_none() {
-            return Err(anyhow!("Device with name {} does not exists!", device_name));
+            return Err(RoomErrors::DeviceNameDoesNotExist(device_name.to_string()));
         }
         dev.unwrap().turn_on();
         Ok(())
@@ -88,10 +88,10 @@ impl<'a> Room<'a> {
     ///
     /// Returns `Ok(())` if `device_name` is found, `Err` with description otherwise
     ///
-    pub fn turn_off(&mut self, device_name: &str) -> Result<()> {
+    pub fn turn_off(&mut self, device_name: &str) -> Result<(), RoomErrors> {
         let dev = self.devices.iter_mut().find(|d| d.name() == device_name);
         if dev.is_none() {
-            return Err(anyhow!("Device with name {} does not exists!", device_name));
+            return Err(RoomErrors::DeviceNameDoesNotExist(device_name.to_string()));
         }
         dev.unwrap().turn_off();
         Ok(())
