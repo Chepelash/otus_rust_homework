@@ -3,6 +3,7 @@ members = [
     "lesson1",
     "lesson4",
     "lesson4_1",
-    "lesson8_lib"
+    "lesson8_lib",
+    "lesson18_tcp_socket"
 ]
 resolver = "2"
