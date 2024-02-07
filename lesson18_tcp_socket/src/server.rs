@@ -12,7 +12,9 @@ use crate::{
     device,
     request::{Request, RequestType},
 };
-
+/// Server struct
+///
+/// Runs TCP server and controlls device's states
 pub struct Server<'a> {
     address: String,
     devices: Vec<&'a mut dyn Device>,
@@ -25,6 +27,8 @@ impl<'a> Server<'a> {
             devices: vec![],
         })
     }
+    /// Adds device to device vector
+    /// Returns `Err(String)` if device name is not unique
     pub fn add_device(&mut self, device: &'a mut dyn Device) -> Result<(), String> {
         if self.devices.iter().any(|d| d.name() == device.name()) {
             return Err(format!("Device with name {} exists!", device.name()));
@@ -32,6 +36,9 @@ impl<'a> Server<'a> {
         self.devices.push(device);
         Ok(())
     }
+    /// Main worker
+    /// Returns `io::Err` if it cannot connect to given address
+    /// or serve stream
     pub fn run(&mut self) -> io::Result<()> {
         let listener = TcpListener::bind(self.address.as_str())?;
         for stream in listener.incoming() {
@@ -77,6 +84,8 @@ impl<'a> Server<'a> {
         }
         Ok(())
     }
+    /// Parses request line and returns Request
+    /// Returns `Err(())` if request string is in wrong format
     fn parse_request(request_line: &str) -> Result<Request, ()> {
         let mut collection = request_line.split_whitespace();
         let req_type = collection.next().unwrap_or("GET");
@@ -85,6 +94,8 @@ impl<'a> Server<'a> {
         let command = Command::from_str(path)?;
         Ok(Request::new(req_type, command))
     }
+    /// Writes http main page into stream
+    /// Returns `io::Err` if it failes to write to stream
     fn write_hello<T>(&self, mut stream: T) -> io::Result<()>
     where
         T: Write,
@@ -112,6 +123,8 @@ impl<'a> Server<'a> {
         stream.write_all(response.as_bytes())?;
         Ok(())
     }
+    /// Writes state of all devices into stream
+    /// Returns `io::Err` if it failes to write to stream
     fn write_state_all<T>(&self, mut stream: T) -> io::Result<()>
     where
         T: Write,
@@ -136,6 +149,9 @@ impl<'a> Server<'a> {
         stream.write_all(response.as_bytes())?;
         Ok(())
     }
+    /// Writes state of a device into stream.
+    /// Writes error page if device does not exist
+    /// Returns `io::Err` if it failes to write to stream
     fn write_state_device<T>(&self, mut stream: T, device_name: &str) -> io::Result<()>
     where
         T: Write,
@@ -161,6 +177,8 @@ impl<'a> Server<'a> {
         stream.write_all(response.as_bytes())?;
         Ok(())
     }
+    /// Turns off device and write a page into stream
+    /// Returns `io::Err` if it failes to write to stream
     fn turn_on_device<T>(&mut self, mut stream: T, device_name: &str) -> io::Result<()>
     where
         T: Write,
@@ -187,6 +205,8 @@ impl<'a> Server<'a> {
         stream.write_all(response.as_bytes())?;
         Ok(())
     }
+    /// Turns off device and write a page into stream
+    /// Returns `io::Err` if it failes to write to stream
     fn turn_off_device<T>(&mut self, mut stream: T, device_name: &str) -> io::Result<()>
     where
         T: Write,
@@ -213,6 +233,8 @@ impl<'a> Server<'a> {
         stream.write_all(response.as_bytes())?;
         Ok(())
     }
+    /// Writes error page into stream
+    /// Returns `io::Err` if it failes to write to stream
     fn write_error<T>(&self, mut stream: T, error_msg: &str) -> io::Result<()>
     where
         T: Write,
