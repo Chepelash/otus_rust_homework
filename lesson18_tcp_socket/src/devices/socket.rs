@@ -4,16 +4,16 @@ use rand::Rng;
 
 use crate::device::{Device, DeviceState};
 
-/// Exampte thermometer
+/// Example socket
 #[derive(Debug)]
-pub struct Thermometer {
+pub struct Socket {
     /// Device name
     name: String,
     /// Device state
     state: DeviceState,
 }
 
-impl Device for Thermometer {
+impl Device for Socket {
     fn name(&self) -> &str {
         self.name.as_str()
     }
@@ -31,30 +31,30 @@ impl Device for Thermometer {
     }
 }
 
-impl Thermometer {
+impl Socket {
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
             state: DeviceState::default(),
         }
     }
-    /// Dummy function for measuring temperature
-    fn measure_temperature(&self) -> Option<i32> {
+    /// Dummy function for measuring power
+    fn measure_power(&self) -> Option<u32> {
         match self.state {
-            DeviceState::On => Some(rand::thread_rng().gen_range(-30..40)),
+            DeviceState::On => Some(rand::thread_rng().gen_range(1..100)),
             DeviceState::Off => None,
         }
     }
 }
 
-impl Display for Thermometer {
+impl Display for Socket {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Socket name: {}\nstate: {}\ncurrent temperature: {}\n",
+            "Socket name: {}\nstate: {}\ncurrent power: {}\n",
             self.name,
             self.state,
-            self.measure_temperature().unwrap_or_default()
+            self.measure_power().unwrap_or_default()
         )
     }
 }

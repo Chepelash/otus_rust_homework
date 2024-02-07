@@ -1,2 +1,2 @@
 /// Example devices
-pub mod thermo;
+pub mod socket;
