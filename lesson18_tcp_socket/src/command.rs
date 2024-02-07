@@ -1,6 +1,5 @@
 use std::str::FromStr;
 
-
 #[derive(Debug, Default)]
 pub enum Command {
     TurnOn {
@@ -25,14 +24,16 @@ impl FromStr for Command {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         dbg!("Request: {s}");
-        
+
         let mut collection = s.split('/');
         dbg!(&collection);
         // should be '/' symb
         collection.next();
         let section = collection.next();
         if section.is_none() {
-            return Ok(Command::Error { error_msg: "Cannot parse request".to_string() });
+            return Ok(Command::Error {
+                error_msg: "Cannot parse request".to_string(),
+            });
         }
         let section = section.unwrap().trim().to_lowercase();
         let dev_name = collection.next();

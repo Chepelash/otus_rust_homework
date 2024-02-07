@@ -5,10 +5,11 @@ use std::{
 };
 
 use build_html::{Html, HtmlContainer, HtmlPage};
-use lesson8_lib::Device;
+use device::Device;
 
 use crate::{
     command::Command,
+    device,
     request::{Request, RequestType},
 };
 

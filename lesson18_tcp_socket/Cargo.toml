@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 build_html = "2.4.0"
-lesson8_lib = { path = "../lesson8_lib" }
+rand = "0.8.5"

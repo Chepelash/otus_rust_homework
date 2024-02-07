@@ -34,7 +34,7 @@ name = "lesson18_tcp_socket"
 version = "0.1.0"
 dependencies = [
  "build_html",
- "lesson8_lib",
+ "rand",
 ]
 
 [[package]]

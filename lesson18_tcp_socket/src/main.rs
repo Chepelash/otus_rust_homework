@@ -1,10 +1,11 @@
 use std::io;
 
-use lesson8_lib::Thermometer;
-
-mod server;
-mod request;
 mod command;
+mod device;
+mod devices;
+mod request;
+mod server;
+use devices::thermo::Thermometer;
 
 fn main() -> io::Result<()> {
     let mut server = server::Server::new("127.0.0.1", 9871)?;
