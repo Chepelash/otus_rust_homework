@@ -43,11 +43,21 @@ impl<'a> Server<'a> {
         let listener = TcpListener::bind(self.address.as_str())?;
         for stream in listener.incoming() {
             let mut stream = stream?;
+            dbg!(stream.peer_addr()?);
             let buf_reader = BufReader::new(&mut stream);
+// let http_request: Vec<_> = buf_reader
+//         .lines()
+//         .map(|result| result.unwrap())
+//         .take_while(|line| !line.is_empty())
+//         .collect();
+//                         dbg!(http_request);
+        
+            
             let request_line = buf_reader
                 .lines()
                 .next()
                 .unwrap_or(Ok("GET / HTTP/1.1".to_string()))?;
+            dbg!(&request_line);
             let request = Self::parse_request(request_line.as_str()).unwrap_or_default();
             dbg!(&request);
             match request {

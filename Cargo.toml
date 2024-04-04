@@ -4,6 +4,8 @@ members = [
     "lesson4",
     "lesson4_1",
     "lesson8_lib",
-    "lesson18_tcp_socket"
+    "lesson18_tcp_socket",
+    "lesson18_server",
+    "lesson18_client"
 ]
 resolver = "2"
